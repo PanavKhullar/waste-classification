@@ -2,7 +2,7 @@
 
 > A portfolio-quality computer vision project classifying waste images into 6 categories using transfer learning with MobileNetV3.
 
-🚧 **Work in Progress** — See [PROGRESS.md](PROGRESS.md) for current status and experiment log.
+🚧 **Work in Progress** — See [PROGRESS.md](PROGRESS.md) for milestone checklist and [EXPERIMENTS.md](EXPERIMENTS.md) for detailed progression case studies ($X \rightarrow Y$ performance gains).
 
 ## Project Overview
 

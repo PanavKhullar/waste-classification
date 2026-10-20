@@ -1,6 +1,7 @@
 # 🗑️ Waste Classification — Progress Tracker & Experiment Log
 
 > **Purpose:** Track all progress, decisions, experiments, and learnings throughout this project.  
+> **Evolution Log:** See [EXPERIMENTS.md](EXPERIMENTS.md) for the detailed step-by-step case studies tracking transitions from $X \rightarrow Y$ and quantitative improvements.  
 > **Updated:** 2026-10-20
 
 ---
