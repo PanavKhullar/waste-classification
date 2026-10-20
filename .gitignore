@@ -3,10 +3,8 @@
 venv/
 env/
 
-# Dataset — do NOT commit images to git
+# Dataset — raw images should never be committed to git
 data/raw/
-data/splits/*.csv
-data/splits/*.json
 
 # Model artifacts — too large for git
 artifacts/

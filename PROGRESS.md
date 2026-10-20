@@ -19,21 +19,21 @@
 
 ## 🗺️ Phase Checklist
 
-### Phase 1 — Setup & Dataset Inspection ⬅️ CURRENT
+### Phase 1 — Setup & Dataset Inspection ✅ COMPLETED
 - [x] Create project folder structure with placeholders
 - [x] Set up configs/config.yaml with all hyperparameters
 - [x] Create requirements.txt, .gitignore, pyproject.toml, README.md
 - [x] Create virtual environment and install dependencies
 - [x] Verify PyTorch + Torchvision installation (PyTorch 2.14.1+cpu, Torchvision 0.29.1+cpu)
-- [ ] Download TrashNet dataset to data/raw/
-- [ ] Run data exploration: class counts, sample images
-- [ ] Check for corrupt/unreadable images
-- [ ] Check for duplicate/near-duplicate images
-- [ ] Create stratified train/val/test splits (70/15/15)
-- [ ] Save split manifest CSV + class_mapping.json
-- [ ] Document dataset findings below
+- [x] Download TrashNet dataset to data/raw/ (2,527 images, 6 classes, MIT license)
+- [x] Run data exploration: class counts, sample images, resolutions
+- [x] Check for corrupt/unreadable images (0 corrupt files found)
+- [x] Check for duplicate/near-duplicate images (8 perceptual dHash clusters detected)
+- [x] Create stratified train/val/test splits (70/15/15: 1768 train, 379 val, 380 test)
+- [x] Save split manifest CSV + class_mapping.json
+- [x] Document dataset findings below
 
-### Phase 2 — Baseline Model
+### Phase 2 — Baseline Model ⬅️ CURRENT
 - [ ] Implement Dataset class + DataLoaders
 - [ ] Implement transforms (model-specific preprocessing)
 - [ ] Build frozen MobileNetV3-Large model
@@ -72,6 +72,30 @@
 - [ ] Clean repository
 - [ ] Optional: FastAPI /predict endpoint
 - [ ] Optional: Docker
+
+---
+
+## 🔍 Phase 1 Dataset Findings & Data Quality Report
+
+| Metric | Result | Interview Note |
+|---|---|---|
+| **Total Images** | 2,527 | Clean, focused dataset (~41 MB resized). |
+| **Corrupt Files** | 0 | All files verified via PIL verify() and OpenCV imread(). |
+| **Image Resolution** | 512 × 384 × 3 (RGB) | Aspect ratio 1.333 (4:3 landscape) across all images. |
+| **Duplicates (dHash)** | 8 clusters | Plain white backgrounds or near-identical multi-shots. Documented for leakage control. |
+
+### Class Breakdown & Imbalance
+| Class | Total | % of Dataset | Train (70%) | Val (15%) | Test (15%) |
+|---|---|---|---|---|---|
+| **paper** | 594 | 23.5% | 416 | 89 | 89 |
+| **glass** | 501 | 19.8% | 350 | 75 | 76 |
+| **plastic** | 482 | 19.1% | 337 | 72 | 73 |
+| **metal** | 410 | 16.2% | 287 | 61 | 62 |
+| **cardboard** | 403 | 15.9% | 282 | 61 | 60 |
+| **trash** | 137 | **5.4%** | 96 | 21 | 20 |
+| **Total** | **2,527** | **100.0%** | **1,768** | **379** | **380** |
+
+> **Key Observation:** `trash` is heavily under-represented (only 5.4% of the dataset, vs 23.5% for `paper`). This makes **macro F1** and **per-class recall** critical evaluation metrics for Phase 4, as a naive model could score high accuracy while completely failing on the minority `trash` class.
 
 ---
 
