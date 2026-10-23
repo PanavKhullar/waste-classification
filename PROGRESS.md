@@ -34,23 +34,24 @@
 - [x] Save split manifest CSV + class_mapping.json
 - [x] Document dataset findings below
 
-### Phase 2 — Baseline Model ⬅️ CURRENT
-- [ ] Implement Dataset class + DataLoaders
-- [ ] Implement transforms (model-specific preprocessing)
-- [ ] Build frozen MobileNetV3-Large model
-- [ ] Implement training loop (engine.py)
-- [ ] Implement validation loop
-- [ ] Training with checkpointing
-- [ ] Generate training curves
-- [ ] Record baseline results
+### Phase 2 — Baseline Model ✅ COMPLETED
+- [x] Implement Dataset class + DataLoaders (`src/waste_classifier/data/dataset.py`)
+- [x] Implement transforms with model-specific preprocessing (`src/waste_classifier/data/transforms.py`)
+- [x] Build frozen MobileNetV3-Large model (`src/waste_classifier/models/build_model.py`)
+- [x] Implement training loop with autograd explanation (`src/waste_classifier/training/engine.py`)
+- [x] Implement validation loop with torch.no_grad()
+- [x] Train baseline model on GPU (NVIDIA GTX 1650, 10 epochs, 3.3 min)
+- [x] Checkpoint best model (`artifacts/best_model.pth`)
+- [x] Generate training curves (`artifacts/training_curves.png`)
+- [x] Record baseline results in EXPERIMENTS.md (Val Acc: 84.17%, Val F1: 0.8194)
 
-### Phase 3 — Transfer Learning & Fine-Tuning
-- [ ] Step A: Train classification head (frozen backbone)
-- [ ] Step B: Unfreeze deeper layers, fine-tune with lower LR
+### Phase 3 — Transfer Learning & Fine-Tuning ⬅️ CURRENT
+- [x] Step A: Train classification head (frozen backbone) — COMPLETED in Phase 2 (84.17% val acc)
+- [ ] Step B: Unfreeze deeper layers (last 4 blocks), fine-tune with lower LR (1e-5)
 - [ ] Step C: Compare frozen vs fine-tuned results
-- [ ] Data augmentation (training only)
+- [ ] Data augmentation verification
 - [ ] Early stopping + LR scheduling
-- [ ] Document improvement rationale
+- [ ] Document improvement rationale in EXPERIMENTS.md
 
 ### Phase 4 — Evaluation & Error Analysis
 - [ ] Test set evaluation (accuracy, macro F1)
@@ -106,7 +107,7 @@
 
 | # | Date | Experiment | Epochs | Train Loss | Train Acc | Val Loss | Val Acc | Val F1 | Test Acc | Test F1 | Notes |
 |---|------|-----------|--------|------------|-----------|----------|---------|--------|----------|---------|-------|
-| — | — | *No experiments yet* | — | — | — | — | — | — | — | — | — |
+| 1 | 2026-10-24 | Frozen MobileNetV3-Large Head | 10 (early stop) | 0.3238 | 88.86% | 0.4986 | **84.17%** | **0.8194** | *Pending Ph4* | *Pending Ph4* | Best at epoch 6. Adam lr=1e-3, ReduceLROnPlateau. Trained in 3.3 min on GTX 1650. |
 
 ---
 

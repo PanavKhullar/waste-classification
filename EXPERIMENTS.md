@@ -11,7 +11,7 @@
 |---|---|---|---|---|---|
 | **Phase 1** | **Dataset & Split Hygiene** | — | — | — | 2,527 images. Severe class imbalance: `trash` is only 5.4%. Stratified splits created. |
 | **Stage 0 (Planned)** | *Simple CNN from scratch (Reference baseline)* | *TBD* | *TBD* | *TBD* | Limited dataset (~1.7k train images) causes severe overfitting on scratch CNNs. |
-| **Stage 1 (Planned)** | *Frozen MobileNetV3-Large Head Only* | *TBD* | *TBD* | *TBD* | Fast convergence, but features are generic ImageNet representations. |
+| **Stage 1 (Completed)** | **Frozen MobileNetV3-Large Head Only** | **84.17%** | **0.8194** | *Pending Phase 4* | Baseline established in 10 epochs (3.3 min on GTX 1650). Reached 84.17% val acc without touching backbone. |
 | **Stage 2 (Planned)** | *Unfrozen Upper Backbone (Fine-Tuning) + Low LR* | *TBD* | *TBD* | *TBD* | Adapts high-level feature extractors to waste textures and lighting. |
 | **Stage 3 (Planned)** | *Fine-Tuning + Data Augmentation + Class Weights* | *TBD* | *TBD* | *TBD* | Addresses minority class underperformance (`trash` 5.4%). |
 
@@ -49,9 +49,17 @@
   1. **Efficiency vs. Accuracy:** MobileNetV3-Large utilizes depthwise separable convolutions, hard-swish activations, and Squeeze-and-Excitation (SE) attention blocks, achieving higher ImageNet Top-1 accuracy than VGG16 with **96% fewer parameters**.
   2. **Preprocessing Integrity:** Many reference projects get 43% accuracy on frozen backbones because they scale inputs with `x / 255.0` instead of subtracting ImageNet channel means `[0.485, 0.456, 0.406]` and dividing by standard deviations `[0.229, 0.224, 0.225]`. We bind Torchvision's native `MobileNet_V3_Large_Weights.DEFAULT.transforms()` to eliminate this bug.
   3. **Edge Deployment Suitability:** For waste sorting on conveyor belts or smart bins, edge inference latency (<20ms on mobile CPU) is crucial.
-- **Planned Verification:**
-  - Train frozen classification head for 15-20 epochs.
-  - Document actual Train/Val Loss, Val Accuracy, and Val Macro F1.
+- **Measured Outcome & Results:**
+  - **Hardware & Device:** NVIDIA GeForce GTX 1650 (CUDA 12.4), 200.6s total runtime across 10 epochs (~18s / epoch).
+  - **Best Epoch:** Epoch 6 (early stopping triggered at Epoch 10 after 7 patience checks).
+  - **Train Metrics (Epoch 6):** Loss: 0.3238 | Accuracy: 88.86%
+  - **Validation Metrics (Epoch 6):** Loss: 0.4986 | **Accuracy: 84.17%** | **Macro F1: 0.8194**
+  - **Comparison with Reference Baseline:**
+    - Reference VGG16 frozen baseline: **43.0%**
+    - Our MobileNetV3-Large frozen baseline: **84.17% (+41.17% improvement)**
+  - **Artifacts Generated:** `artifacts/best_model.pth`, `artifacts/training_curves.png`, `artifacts/training_history.json`.
+- **Interview Talking Point:**
+  > *"Rather than using a heavy, outdated architecture like VGG16 which was stuck at 43% due to incorrect preprocessing, I implemented MobileNetV3-Large with strict ImageNet channel normalization. This baseline alone reached 84.17% validation accuracy with all feature extractors completely frozen, training in just 3.3 minutes on an entry-level GPU."*
 
 ---
 
@@ -108,3 +116,4 @@
   - Val Loss: ...   | Val Acc: ...   | Val Macro F1: ...
 - **Key Insight:** Did the experiment validate the hypothesis? What was learned?
 ```
+
